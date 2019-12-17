@@ -40,44 +40,23 @@
 		var radio = 28
 		var lista = ("{{ lista }}").split(/ *, *| *\/ */);
 		var listaOrdenada = [];
-
-		function dibujaArbol(lista){
-			var valores = {
-				0: [x/2, 2*y/6],
-				1: [x/4, 3*y/6],
-				2: [3*x/4, 3*y/6],
-				3: [x/8, 4*y/6],
-				4: [3*x/8, 4*y/6],
-				5: [5*x/8, 4*y/6],
-				6: [7*x/8, 4*y/6],
-				7: [x/16, 5*y/6],
-				8: [3*x/16, 5*y/6],
-				9: [5*x/16, 5*y/6],
-				10: [7*x/16, 5*y/6],
-				11: [9*x/16, 5*y/6],
-				12: [11*x/16, 5*y/6],
-				13: [13*x/16, 5*y/6],
-				14: [15*x/16, 5*y/6]
-			};
-			for (i = lista.length-1; i > -1; i--) {
-				var indicePadre = Math.floor((i-1)/2);
-				if(indicePadre>=0){
-					ctx.beginPath();
-					ctx.moveTo(valores[i][0], valores[i][1]);
-					ctx.lineTo(valores[indicePadre][0], valores[indicePadre][1]);
-					ctx.strokeStyle = "black";
-					ctx.stroke();}
-				}
-			for (i = 0; i < lista.length; i++) {
-				ctx.beginPath();
-				ctx.arc(valores[i][0], valores[i][1], radio, 0, 2*Math.PI, false);
-				ctx.fillStyle = "#308be6";
-				ctx.fill();
-				ctx.textAlign = "center";
-				ctx.fillStyle = "white";
-				ctx.fillText(lista[i], valores[i][0], valores[i][1]+8);
-			}
-		}
+		var valores = {
+			0: [x/2, 2*y/6],
+			1: [x/4, 3*y/6],
+			2: [3*x/4, 3*y/6],
+			3: [x/8, 4*y/6],
+			4: [3*x/8, 4*y/6],
+			5: [5*x/8, 4*y/6],
+			6: [7*x/8, 4*y/6],
+			7: [x/16, 5*y/6],
+			8: [3*x/16, 5*y/6],
+			9: [5*x/16, 5*y/6],
+			10: [7*x/16, 5*y/6],
+			11: [9*x/16, 5*y/6],
+			12: [11*x/16, 5*y/6],
+			13: [13*x/16, 5*y/6],
+			14: [15*x/16, 5*y/6]
+		};
 
 		// Obtiene índice de pariente
 
@@ -154,19 +133,45 @@
 		    }
 		}
 
+
+		tiempo = 0;
+		function animate(){
+			requestAnimationFrame(animate);
+
+			ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+			for (i = lista.length-1; i > -1; i--) {
+				var indicePadre = Math.floor((i-1)/2);
+				if(indicePadre>=0){
+					ctx.beginPath();
+					ctx.moveTo(valores[i][0], valores[i][1]);
+					ctx.lineTo(valores[indicePadre][0], valores[indicePadre][1]);
+					ctx.strokeStyle = "black";
+					ctx.stroke();}
+				}
+			for (i = 0; i < lista.length; i++) {
+				ctx.beginPath();
+				ctx.arc(valores[i][0], valores[i][1], radio, 0, 2*Math.PI, false);
+				ctx.fillStyle = "#308be6";
+				ctx.fill();
+				ctx.textAlign = "center";
+				ctx.fillStyle = "white";
+				ctx.fillText(lista[i], valores[i][0], valores[i][1]+8);
+			}
+			tiempo += 5;
+			if(tiempo>1600){
+				propiedadHeap();
+			}
+
+
+		}
+
 		// Programa principal
 
 		if (lista.length<=15){
-
-			alert(lista);
-			propiedadHeap();
-			alert(lista);
-			while(lista.length>0){
-				extraerCima();
-			}
-			alert(listaOrdenada);
-			dibujaArbol(listaOrdenada);}
-
+			animate();
+			// setTimeout(dibujaArbol, 3000);
+		}
 		else{
 			ctx.fillStyle = "red";
 			ctx.fillText("Ingresa 15 números solamente.", 250, y/2);}
@@ -176,3 +181,8 @@
 
 
 {% endblock %}
+
+			propiedadHeap();
+			while(lista.length>0){
+				extraerCima();
+			}
