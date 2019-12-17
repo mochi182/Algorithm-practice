@@ -1,0 +1,41 @@
+{% extends 'algoritmo/base.html' %}
+{% block content %}
+<div class="flexContenedor1">
+	<div class="text-center p-4">
+		<div class="row">
+			<div class="text-center">
+				<h1 class="display-3 sombra_texto">HeapSort</h1>
+				<p class="h4">Algoritmo de ordenamiento</p>
+				<p class="text-primary font-weight-light">Francisco Pérez - Melitón Rodríguez - Alejandro Andrade</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="flexBox1 text-center shadow p-4">
+		<canvas id="myCanvas" width="800" height="600" style="border:1px solid grey;"></canvas>
+	</div>
+
+	<div class="flexBox1 text-center shadow p-4">
+		<p class="font-weight-bold">{{ lista }}</p>
+		<b class="font-weight-light">Ingresa una lista (separada por comas):</b>
+		<form action="nueva_lista" method="POST">{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit" class="btn btn-primary">Ordenar lista</button>
+		</form>
+	</div>
+
+</div>
+
+
+<script>
+	$( document ).ready(function() {
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+		var lista = ("{{ lista }}").split(/ *, *| *\/ */);
+		ctx.font = "30px Arial";
+		ctx.fillText(lista[4], 10, 50);
+	});
+</script>
+
+
+{% endblock %}
