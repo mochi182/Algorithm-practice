@@ -13,4 +13,5 @@ def nueva_lista(request):
 		if form.is_valid():
 			cd = form.cleaned_data
 			lista = cd.get('lista')
+
 			return render(request, 'algoritmo/algoritmo.html', {'lista': lista, 'form': form})

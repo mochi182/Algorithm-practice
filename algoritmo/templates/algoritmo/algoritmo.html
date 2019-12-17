@@ -19,11 +19,11 @@
 		<b class="font-weight-light">Ingresa una lista:</b>
 		<form action="nueva_lista" method="POST">{% csrf_token %}
 			{{ form.as_p }}
-			<button type="submit" class="btn btn-primary">Ordenar lista</button>
+			<button type="submit" class="btn btn-primary">Ordenar</button>
 		</form>
 		<ul class="list-group">
 			<li class="list-group-item list-group-item-warning">Separados por coma.</li>
-			<li class="list-group-item list-group-item-warning">15 números solamente.</li>
+			<li class="list-group-item list-group-item-warning">15 números máximo.</li>
 		</ul>
 	</div>
 
@@ -39,12 +39,7 @@
 		var y = document.getElementById("myCanvas").height;
 		var radio = 28
 		var lista = ("{{ lista }}").split(/ *, *| *\/ */);
-
-		if (lista.length<=15){
-			dibujaArbol(lista);}
-		else{
-			ctx.fillStyle = "red";
-			ctx.fillText("Ingresa 15 números solamente.", 250, y/2);}
+		var listaOrdenada = [];
 
 		function dibujaArbol(lista){
 			var valores = {
@@ -84,6 +79,97 @@
 			}
 		}
 
+		// Obtiene índice de pariente
+
+		function dameIndiceHijoIzquierdo(indicePadre){
+		    return Math.floor((2*indicePadre)+1);}
+
+		function dameIndiceHijoDerecho(indicePadre){
+		    return Math.floor((2*indicePadre)+2);}
+
+		function dameIndicePadre(indiceHijo){
+		    return Math.floor((indiceHijo-1)/2);}
+
+		// Verifica pariente
+
+		function tieneHijoIzquierdo(indice){
+		    return Boolean(dameIndiceHijoIzquierdo(indice) < lista.length);}
+
+		function tieneHijoDerecho(indice){
+		    return Boolean(dameIndiceHijoDerecho(indice) < lista.length);}
+
+		function tienePadre(indice){
+		    return Boolean(dameIndicePadre(indice) >= 0);}
+
+		// Obtiene pariente
+
+		function hijoIzquierdo(indice){
+		    return parseInt(lista[dameIndiceHijoIzquierdo(indice)]);}
+
+		function hijoDerecho(indice){
+		    return parseInt(lista[dameIndiceHijoDerecho(indice)]);}
+
+		function padre(indice){
+		    return parseInt(lista[dameIndicePadre(indice)]);}
+
+		// Funciones de ayuda
+
+		function intercambio(indiceUno, indiceDos){
+		    var temp = lista[indiceUno];
+		    lista[indiceUno] = lista[indiceDos];
+		    lista[indiceDos] = temp;
+		}
+
+		function extraerCima(){
+			listaOrdenada.splice(0, 0, lista[0]);
+		    lista[0] = lista[(lista.length)-1];
+		    lista.pop();
+		    heapificar();
+		}
+
+		function heapificar(){
+		    var indiceGrande = 0;
+		    var indice = 0;
+		    while(Boolean(tieneHijoIzquierdo(indice, lista))){
+				indiceGrande = dameIndiceHijoIzquierdo(indice);
+				if(Boolean(tieneHijoDerecho(indice)) && (hijoDerecho(indice) >  hijoIzquierdo(indice))){
+					indiceGrande = dameIndiceHijoDerecho(indice);}
+				if(parseInt(lista[indice]) > parseInt(lista[indiceGrande])){
+					break;}
+				else{
+					intercambio(indice, indiceGrande);}
+				indice = indiceGrande;}
+		}
+
+		function propiedadHeap(){
+			var sigue = true;
+			while(Boolean(sigue)){
+				sigue = false;
+				for(i = lista.length-1; i > -1; i--){
+					if(Boolean(tienePadre(i)) && (parseInt(lista[i]) > padre(i))){
+						intercambio(i, dameIndicePadre(i));
+						sigue = true;
+					}
+				}
+		    }
+		}
+
+		// Programa principal
+
+		if (lista.length<=15){
+
+			alert(lista);
+			propiedadHeap();
+			alert(lista);
+			while(lista.length>0){
+				extraerCima();
+			}
+			alert(listaOrdenada);
+			dibujaArbol(listaOrdenada);}
+
+		else{
+			ctx.fillStyle = "red";
+			ctx.fillText("Ingresa 15 números solamente.", 250, y/2);}
 
 	});
 </script>
