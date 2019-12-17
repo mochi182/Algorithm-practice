@@ -103,10 +103,6 @@
 			listaOrdenada.splice(0, 0, lista[0]);
 		    lista[0] = lista[(lista.length)-1];
 		    lista.pop();
-		    heapificar();
-		}
-
-		function heapificar(){
 		    var indiceGrande = 0;
 		    var indice = 0;
 		    while(Boolean(tieneHijoIzquierdo(indice, lista))){
@@ -135,6 +131,8 @@
 
 
 		tiempo = 0;
+		var cuenta = 0;
+		swich1 = false;
 		function animate(){
 			requestAnimationFrame(animate);
 
@@ -159,10 +157,16 @@
 				ctx.fillText(lista[i], valores[i][0], valores[i][1]+8);
 			}
 			tiempo += 5;
-			if(tiempo>1600){
+			if((tiempo>1300) && (swich1 == false)){
 				propiedadHeap();
+				alert('Se ordena el montículo.');
+				swich1 = true;
 			}
 
+			if((tiempo>2000) && (lista.length>0)){
+				tiempo -=800;
+				extraerCima();
+			}
 
 		}
 
@@ -181,8 +185,3 @@
 
 
 {% endblock %}
-
-			propiedadHeap();
-			while(lista.length>0){
-				extraerCima();
-			}
