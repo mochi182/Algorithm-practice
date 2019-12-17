@@ -41,21 +41,21 @@
 		var lista = ("{{ lista }}").split(/ *, *| *\/ */);
 		var listaOrdenada = [];
 		var valores = {
-			0: [x/2, 2*y/6],
-			1: [x/4, 3*y/6],
-			2: [3*x/4, 3*y/6],
-			3: [x/8, 4*y/6],
-			4: [3*x/8, 4*y/6],
-			5: [5*x/8, 4*y/6],
-			6: [7*x/8, 4*y/6],
-			7: [x/16, 5*y/6],
-			8: [3*x/16, 5*y/6],
-			9: [5*x/16, 5*y/6],
-			10: [7*x/16, 5*y/6],
-			11: [9*x/16, 5*y/6],
-			12: [11*x/16, 5*y/6],
-			13: [13*x/16, 5*y/6],
-			14: [15*x/16, 5*y/6]
+			0: [x/2, 1.5*y/6],
+			1: [x/4, 2.5*y/6],
+			2: [3*x/4, 2.5*y/6],
+			3: [x/8, 3.5*y/6],
+			4: [3*x/8, 3.5*y/6],
+			5: [5*x/8, 3.5*y/6],
+			6: [7*x/8, 3.5*y/6],
+			7: [x/16, 4.5*y/6],
+			8: [3*x/16, 4.5*y/6],
+			9: [5*x/16, 4.5*y/6],
+			10: [7*x/16, 4.5*y/6],
+			11: [9*x/16, 4.5*y/6],
+			12: [11*x/16, 4.5*y/6],
+			13: [13*x/16, 4.5*y/6],
+			14: [15*x/16, 4.5*y/6]
 		};
 
 		// Obtiene índice de pariente
@@ -99,23 +99,6 @@
 		    lista[indiceDos] = temp;
 		}
 
-		function extraerCima(){
-			listaOrdenada.splice(0, 0, lista[0]);
-		    lista[0] = lista[(lista.length)-1];
-		    lista.pop();
-		    var indiceGrande = 0;
-		    var indice = 0;
-		    while(Boolean(tieneHijoIzquierdo(indice, lista))){
-				indiceGrande = dameIndiceHijoIzquierdo(indice);
-				if(Boolean(tieneHijoDerecho(indice)) && (hijoDerecho(indice) >  hijoIzquierdo(indice))){
-					indiceGrande = dameIndiceHijoDerecho(indice);}
-				if(parseInt(lista[indice]) > parseInt(lista[indiceGrande])){
-					break;}
-				else{
-					intercambio(indice, indiceGrande);}
-				indice = indiceGrande;}
-		}
-
 		function propiedadHeap(){
 			var sigue = true;
 			while(Boolean(sigue)){
@@ -131,12 +114,16 @@
 
 
 		tiempo = 0;
+		var poptop = '';
+		var poptopX = 760;
 		var cuenta = 0;
 		swich1 = false;
+		swich2 = true;
+		swich3 = true;
 		function animate(){
 			requestAnimationFrame(animate);
 
-			ctx.clearRect(0, 0, innerWidth, innerHeight);
+			ctx.clearRect(0, 80, innerWidth, innerHeight);
 
 			for (i = lista.length-1; i > -1; i--) {
 				var indicePadre = Math.floor((i-1)/2);
@@ -156,22 +143,53 @@
 				ctx.fillStyle = "white";
 				ctx.fillText(lista[i], valores[i][0], valores[i][1]+8);
 			}
+
+			// Eventos
 			tiempo += 5;
-			if((tiempo>1300) && (swich1 == false)){
+			if((tiempo>1100) && (swich1 == false) && (lista != '')){
 				propiedadHeap();
 				alert('Se ordena el montículo.');
 				swich1 = true;
 			}
 
-			if((tiempo>2000) && (lista.length>0)){
+			if((tiempo>2200) && (lista.length>0) && (lista != '')){
 				tiempo -=800;
-				extraerCima();
+				if(swich2 == true){
+					alert('Se extrae la cima del montículo. El último lugar de la lista toma el primer lugar.');
+					swich2 = false;
+				}
+
+				listaOrdenada.splice(0, 0, lista[0]);
+				ctx.textAlign = "center";
+				ctx.fillStyle = "grey";
+			    ctx.fillText(lista[0], poptopX, 40);
+			    lista[0] = lista[(lista.length)-1];
+			    poptop = lista.pop();
+
+				if(swich3 == true){
+					alert('Luego se reordena el montículo y se repite el proceso.');
+					swich3 = false;
+				}
+
+			    poptopX -= 40;
+
+			    var indiceGrande = 0;
+			    var indice = 0;
+			    while(Boolean(tieneHijoIzquierdo(indice, lista))){
+					indiceGrande = dameIndiceHijoIzquierdo(indice);
+					if(Boolean(tieneHijoDerecho(indice)) && (hijoDerecho(indice) >  hijoIzquierdo(indice))){
+						indiceGrande = dameIndiceHijoDerecho(indice);}
+					if(parseInt(lista[indice]) > parseInt(lista[indiceGrande])){
+						break;}
+					else{
+						intercambio(indice, indiceGrande);}
+					indice = indiceGrande;}
 			}
+
 
 		}
 
 		// Programa principal
-
 		if (lista.length<=15){
 			animate();
 			// setTimeout(dibujaArbol, 3000);
